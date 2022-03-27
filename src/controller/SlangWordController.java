@@ -41,7 +41,7 @@ public class SlangWordController implements ActionListener {
 			String slangword = ((DictionaryPanel) view.getDictionaryView()).getSlangWord().toUpperCase().trim();
 			String definition = ((DictionaryPanel) view.getDictionaryView()).getDefinition().trim();
 			
-			if (slangword.equals("Enter slang word") || slangword.trim().equals("") || definition.equals("Enter definition") || definition.trim().equals("")) {
+			if (slangword.trim().equals("") || definition.trim().equals("")) {
 				JOptionPane.showMessageDialog(view, "Please enter slang word and definition");
 			} else {
 				if (view.getDictionary().checkSlangWordExisted(slangword)) {
@@ -66,13 +66,32 @@ public class SlangWordController implements ActionListener {
 					}
 				} else {
 					view.getDictionary().addSlangWord(slangword, definition);
+					try {
+						FileIO.addNewSlangWordToFile(slangword, definition);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					JOptionPane.showMessageDialog(view, "Add a new slang word successfully");
 				}
 				
 			}
 		}
 		else if (command.equals("Edit")) {
-			
+			String slangword = ((DictionaryPanel) view.getDictionaryView()).getSlangWord().toUpperCase().trim();
+			String definition = ((DictionaryPanel) view.getDictionaryView()).getDefinition().trim();
+			if (view.getDictionary().checkDefinitionExisted(slangword, definition)) {
+		            String newDefinition = JOptionPane.showInputDialog("Enter new definition");
+		            try {
+						FileIO.editSlangWord(view.getDictionary(), slangword, definition, newDefinition);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+		            JOptionPane.showMessageDialog(view, "Edit this slang word successfully");
+			} else {
+				JOptionPane.showMessageDialog(view, "Please enter correct slang word and definition");
+			}
 		}
 		else if (command.equals("Delete")) {
 			

@@ -76,6 +76,24 @@ public class FileIO {
 		Files.write(path, content.getBytes(charset));
 	}
 	
+	public static void addNewSlangWordToFile(String slangword, String definition) throws IOException {
+		File dictionaryFile = new File(SLANG_WORD_FILE);
+		BufferedWriter bw = new BufferedWriter(new FileWriter(dictionaryFile, true));
+		bw.write(slangword + "`" + definition + "\n");
+		bw.close();
+	}
+	
+	public static void editSlangWord(Dictionary dictionary, String slangword, String oldDefinition, String newDefinition) throws IOException {
+		String oldLine = dictionary.getLineBySlangWord(slangword);
+		dictionary.editSlangWord(slangword, oldDefinition, newDefinition);
+		String newLine = dictionary.getLineBySlangWord(slangword);
+		Path path = Paths.get(SLANG_WORD_FILE);
+		Charset charset = StandardCharsets.UTF_8;
+		String content = new String(Files.readAllBytes(path), charset);
+		content = content.replaceFirst(oldLine, newLine);
+		Files.write(path, content.getBytes(charset));
+	}
+	
 	public static void writeHistory(History history) throws IOException {
 		FileOutputStream fos = new FileOutputStream(new File(HISTORY_FILE));
 		ObjectOutputStream oos = new ObjectOutputStream(fos);

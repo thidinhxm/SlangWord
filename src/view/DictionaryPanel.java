@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -15,12 +17,16 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import model.Dictionary;
 import model.SearchWord;
+import javax.swing.JLabel;
 
 public class DictionaryPanel extends JPanel {
 
@@ -31,6 +37,9 @@ public class DictionaryPanel extends JPanel {
 	private JTextField textFieldDefinition;
 	private Dictionary dictionaryModel;
 	private JComboBox<String> comboBoxSearchType;
+	private JTextField txtSlangWord;
+	private JTextField txtDefinition;
+	private JTextField txtKeyword;
 	/**
 	 * Create the panel.
 	 */
@@ -41,87 +50,66 @@ public class DictionaryPanel extends JPanel {
 		
 		this.dictionaryModel = dictionaryModel;
 		
+		JButton btnSearch = new JButton("Search");
+		btnSearch.addActionListener(action);
+		btnSearch.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnSearch.setBounds(549, 26, 104, 54);
+		this.add(btnSearch);
 		
-		textFieldSearch = new JTextField("Enter keyword");
-		textFieldSearch.addFocusListener(new FocusAdapter() {
-			@Override
-		    public void focusGained(FocusEvent e) {
-		        if (textFieldSearch.getText().equals("Enter keyword")) {
-		        	textFieldSearch.setText("");
-		        	textFieldSearch.setForeground(Color.BLACK);
-		        }
-		    }
-		    @Override
-		    public void focusLost(FocusEvent e) {
-		        if (textFieldSearch.getText().isEmpty()) {
-		        	textFieldSearch.setForeground(Color.GRAY);
-		        	textFieldSearch.setText("Enter keyword");
-		        }
-		    }
-		});
+		textFieldSearch = new JTextField("");
 		textFieldSearch.setForeground(Color.GRAY);
 		textFieldSearch.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		textFieldSearch.setColumns(10);
-		textFieldSearch.setBounds(240, 27, 467, 54);
+		textFieldSearch.setBounds(140, 27, 242, 54);
+		textFieldSearch.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				changeDictionaryTable();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				changeDictionaryTable();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				changeDictionaryTable();
+			}
+			
+			public void changeDictionaryTable() {
+				if (textFieldSearch.getText().length() == 0) {
+					displayDictionary();
+				}
+			}
+			
+		});
 		this.add(textFieldSearch);
 		
 		comboBoxSearchType = new JComboBox<>();
 		comboBoxSearchType.addItem("Slang Word");
 		comboBoxSearchType.addItem("Definition");
 		comboBoxSearchType.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		comboBoxSearchType.setBounds(45, 26, 147, 54);
+		comboBoxSearchType.setBounds(392, 26, 147, 54);
 		this.add(comboBoxSearchType);
 		
-		JButton btnSearch = new JButton("Search");
-		btnSearch.addActionListener(action);
-		btnSearch.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnSearch.setBounds(752, 26, 104, 54);
-		this.add(btnSearch);
 		
-		textFieldSlangWord = new JTextField("Enter slang word");
-		textFieldSlangWord.addFocusListener(new FocusAdapter() {
-			@Override
-		    public void focusGained(FocusEvent e) {
-		        if (textFieldSlangWord.getText().equals("Enter slang word")) {
-		        	textFieldSlangWord.setText("");
-		        	textFieldSlangWord.setForeground(Color.BLACK);
-		        }
-		    }
-		    @Override
-		    public void focusLost(FocusEvent e) {
-		        if (textFieldSlangWord.getText().isEmpty()) {
-		        	textFieldSlangWord.setForeground(Color.GRAY);
-		        	textFieldSlangWord.setText("Enter slang word");
-		        }
-		    }
-		});
+		
+		textFieldSlangWord = new JTextField("");
 		textFieldSlangWord.setForeground(Color.GRAY);
 		textFieldSlangWord.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		textFieldSlangWord.setColumns(10);
-		textFieldSlangWord.setBounds(45, 516, 554, 54);
+		textFieldSlangWord.setBounds(164, 516, 435, 54);
 		this.add(textFieldSlangWord);
 		
-		textFieldDefinition = new JTextField("Enter definition");
-		textFieldDefinition.addFocusListener(new FocusAdapter() {
-			@Override
-		    public void focusGained(FocusEvent e) {
-		        if (textFieldDefinition.getText().equals("Enter definition")) {
-		        	textFieldDefinition.setText("");
-		        	textFieldDefinition.setForeground(Color.BLACK);
-		        }
-		    }
-		    @Override
-		    public void focusLost(FocusEvent e) {
-		        if (textFieldDefinition.getText().isEmpty()) {
-		        	textFieldDefinition.setForeground(Color.GRAY);
-		        	textFieldDefinition.setText("Enter definition");
-		        }
-		    }
-		});
+		textFieldDefinition = new JTextField("");
 		textFieldDefinition.setForeground(Color.GRAY);
 		textFieldDefinition.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		textFieldDefinition.setColumns(10);
-		textFieldDefinition.setBounds(45, 594, 554, 54);
+		textFieldDefinition.setBounds(164, 594, 435, 54);
 		this.add(textFieldDefinition);
 		
 		JScrollPane scrollPaneDictionary = new JScrollPane();
@@ -136,6 +124,7 @@ public class DictionaryPanel extends JPanel {
 				"No", "Slang Word", "Definition"
 			}
 		));
+		tableDictionary.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableDictionary.getColumnModel().getColumn(0).setPreferredWidth(5);
 		tableDictionary.getColumnModel().getColumn(1).setPreferredWidth(100);
 		tableDictionary.getColumnModel().getColumn(2).setPreferredWidth(500);
@@ -145,20 +134,46 @@ public class DictionaryPanel extends JPanel {
 		scrollPaneDictionary.setViewportView(tableDictionary);
 		tableModel = (DefaultTableModel) tableDictionary.getModel();
 		displayDictionary();
-		tableDictionary.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		tableDictionary.addMouseListener(new MouseListener() {
 
 			@Override
-			public void valueChanged(ListSelectionEvent e) {
+			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-				String slangword = tableDictionary.getValueAt(tableDictionary.getSelectedRow(), 1).toString();
-				String definition = tableDictionary.getValueAt(tableDictionary.getSelectedRow(), 2).toString();
-				textFieldSlangWord.setText(slangword);
-				textFieldSlangWord.setForeground(Color.BLACK);
-				textFieldDefinition.setText(definition);
-				textFieldDefinition.setForeground(Color.BLACK);
+				int row = tableDictionary.getSelectedRow();
+				if (row >= 0) {
+					String slangword = tableModel.getValueAt(row, 1) + "";
+					String definition = tableModel.getValueAt(row, 2) + "";
+					textFieldSlangWord.setText(slangword);
+					textFieldDefinition.setText(definition);
+				}
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
 			}
 			
 		});
+		
 		
 		JButton btnEdit = new JButton("Edit");
 		btnEdit.addActionListener(action);
@@ -178,15 +193,49 @@ public class DictionaryPanel extends JPanel {
 		btnAdd.setBounds(638, 515, 104, 54);
 		this.add(btnAdd);
 		
-		JButton btnReset = new JButton("Reset");
+		JButton btnReset = new JButton("Reset Dictionary");
 		btnReset.addActionListener(action);
 		btnReset.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnReset.setBounds(752, 593, 104, 54);
+		btnReset.setBounds(663, 26, 193, 54);
 		this.add(btnReset);
+		
+		txtSlangWord = new JTextField("Slang Word:");
+		txtSlangWord.setEditable(false);
+		txtSlangWord.setForeground(Color.GRAY);
+		txtSlangWord.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		txtSlangWord.setColumns(10);
+		txtSlangWord.setBounds(45, 516, 120, 54);
+		add(txtSlangWord);
+		
+		txtDefinition = new JTextField("Definition:");
+		txtDefinition.setForeground(Color.GRAY);
+		txtDefinition.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		txtDefinition.setEditable(false);
+		txtDefinition.setColumns(10);
+		txtDefinition.setBounds(45, 594, 120, 54);
+		add(txtDefinition);
+		
+		txtKeyword = new JTextField("Keyword:");
+		txtKeyword.setForeground(Color.GRAY);
+		txtKeyword.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		txtKeyword.setEditable(false);
+		txtKeyword.setColumns(10);
+		txtKeyword.setBounds(45, 27, 95, 54);
+		add(txtKeyword);
+		
+		JButton btnCancel = new JButton("Cancel");
+		btnCancel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnCancel.setBounds(752, 594, 104, 54);
+		add(btnCancel);
 	}
 	
 	public int search(String keyword, String searchType) {
+		
 		ArrayList<HashMap.Entry<String, ArrayList<String>>> result = new ArrayList<>();
+		int selectedRow = tableDictionary.getSelectedRow();
+		if (selectedRow > 0) {
+			tableModel.removeRow(selectedRow);
+		}
 		tableModel.setRowCount(0);
 		if (searchType.equals("Slang Word")) {
 			  result = dictionaryModel.searchBySlangWord(keyword);

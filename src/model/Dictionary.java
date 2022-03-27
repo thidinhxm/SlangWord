@@ -67,8 +67,14 @@ public class Dictionary {
 		}
 	}
 	
-	public void editSlangWord(String slangWord) {
-		
+	public void editSlangWord(String slangword, String oldDefinition, String newDefinition) {
+		ArrayList<String> definitionList = dictionary.get(slangword);
+		for (int i = 0; i < definitionList.size(); i++) {
+			if (definitionList.get(i).equals(oldDefinition)) {
+				definitionList.set(i, newDefinition);
+				break;
+			}
+		}	
 	}
 	
 	public void resetSlangWord() {
