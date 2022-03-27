@@ -8,7 +8,7 @@ public class SearchWord {
 		SLANGWORD
 	}
 	private String keyword;
-	private String restString;
+	private String result;
 	private SearchType type;
 	private LocalDateTime time;
 	
@@ -43,12 +43,12 @@ public class SearchWord {
 		this.time = time;
 	}
 
-	public String getRestString() {
-		return restString;
+	public String getResult() {
+		return result;
 	}
 
-	public void setRestString(String restString) {
-		this.restString = restString;
+	public void setResult(String result) {
+		this.result = result;
 	}	
 	
 }

@@ -2,61 +2,65 @@ package view;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import controller.DictionaryController;
+import model.Dictionary;
+
 public class DictionaryPanel extends JPanel {
 
 	private JTable tableDictionary;
+	private DefaultTableModel tableModel;
 	private JTextField textFieldSearch;
 	private JTextField textFieldSlangWord;
 	private JTextField textFieldDefinition;
-
+	private Dictionary dictionaryModel;
+	private JComboBox<String> comboBoxSearchType;
 	/**
 	 * Create the panel.
 	 */
 	public DictionaryPanel() {
-//		JPanel this = new JPanel();
 		this.setForeground(Color.WHITE);
 		this.setBackground(new Color(244, 164, 96));
-//		tabbedPaneMenu.addTab("Dictionary", null, this, null);
 		this.setLayout(null);
 		
-		JLabel lblResut = new JLabel("");
-		lblResut.setForeground(Color.BLACK);
-		lblResut.setFont(new Font("Tahoma", Font.ITALIC, 20));
-		lblResut.setBounds(192, 173, 189, 54);
-		this.add(lblResut);
+		dictionaryModel = new Dictionary();
+		ActionListener action = new DictionaryController(this); 
 		
 		JScrollPane scrollPaneDictionary = new JScrollPane();
 		scrollPaneDictionary.setBounds(45, 121, 811, 357);
 		this.add(scrollPaneDictionary);
 		
 		tableDictionary = new JTable();
-		tableDictionary.setEnabled(false);
 		tableDictionary.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
-				"Slang Word", "Definition"
+				"No", "Slang Word", "Definition"
 			}
 		));
-		tableDictionary.getColumnModel().getColumn(0).setPreferredWidth(25);
+		tableDictionary.getColumnModel().getColumn(0).setPreferredWidth(5);
+		tableDictionary.getColumnModel().getColumn(1).setPreferredWidth(100);
+		tableDictionary.getColumnModel().getColumn(2).setPreferredWidth(500);
 		tableDictionary.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		tableDictionary.getTableHeader().setFont( new Font( "Tahoma" , Font.BOLD, 20 ));
 		tableDictionary.setRowHeight(25);
 		scrollPaneDictionary.setViewportView(tableDictionary);
-		
+		tableModel = (DefaultTableModel) tableDictionary.getModel();
+		displayDictionary();
 		textFieldSearch = new JTextField("Enter keyword");
 		textFieldSearch.addFocusListener(new FocusAdapter() {
 			@Override
@@ -77,17 +81,18 @@ public class DictionaryPanel extends JPanel {
 		textFieldSearch.setForeground(Color.GRAY);
 		textFieldSearch.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		textFieldSearch.setColumns(10);
-		textFieldSearch.setBounds(45, 27, 467, 54);
+		textFieldSearch.setBounds(240, 27, 467, 54);
 		this.add(textFieldSearch);
 		
-		JComboBox<String> comboBoxSearchType = new JComboBox<>();
+		comboBoxSearchType = new JComboBox<>();
 		comboBoxSearchType.addItem("Slang Word");
 		comboBoxSearchType.addItem("Definition");
 		comboBoxSearchType.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		comboBoxSearchType.setBounds(555, 26, 147, 54);
+		comboBoxSearchType.setBounds(45, 26, 147, 54);
 		this.add(comboBoxSearchType);
 		
 		JButton btnSearch = new JButton("Search");
+		btnSearch.addActionListener(action);
 		btnSearch.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnSearch.setBounds(752, 26, 104, 54);
 		this.add(btnSearch);
@@ -139,24 +144,57 @@ public class DictionaryPanel extends JPanel {
 		this.add(textFieldDefinition);
 		
 		JButton btnEdit = new JButton("Edit");
+		btnEdit.addActionListener(action);
 		btnEdit.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnEdit.setBounds(752, 515, 104, 54);
 		this.add(btnEdit);
 		
 		JButton btnDelete = new JButton("Delete");
+		btnDelete.addActionListener(action);
 		btnDelete.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnDelete.setBounds(638, 593, 104, 54);
 		this.add(btnDelete);
 		
 		JButton btnAdd = new JButton("Add");
+		btnAdd.addActionListener(action);
 		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnAdd.setBounds(638, 515, 104, 54);
 		this.add(btnAdd);
 		
 		JButton btnReset = new JButton("Reset");
+		btnReset.addActionListener(action);
 		btnReset.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnReset.setBounds(752, 593, 104, 54);
 		this.add(btnReset);
 	}
-
+	
+	public void search() {
+		String searchType = "" + comboBoxSearchType.getSelectedItem();
+		String keyword = textFieldSearch.getText();
+		ArrayList<HashMap.Entry<String, HashSet<String>>> result = new ArrayList<>();
+		tableModel.setRowCount(0);
+		if (searchType.equals("Slang Word")) {
+			  result = dictionaryModel.searchBySlangWord(keyword);
+			  for (HashMap.Entry<String, HashSet<String>> entry : result) {
+				  addSlangWordToTable(entry, tableModel.getRowCount() + 1);  
+			  }
+		}
+	}
+	
+	public void addSlangWordToTable(HashMap.Entry<String, HashSet<String>> entry, int position) {
+		for (String definition : entry.getValue()) {
+			tableModel.addRow(new Object[] {
+					position++ + "",
+					entry.getKey(),
+					definition
+			});
+		}
+	}
+	
+	public void displayDictionary() {
+		tableModel.setRowCount(0);
+		for (HashMap.Entry<String, HashSet<String>> entry : dictionaryModel.getDictionary().entrySet()) {
+			addSlangWordToTable(entry, tableDictionary.getRowCount() + 1);
+		}
+	}
 }
