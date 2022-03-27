@@ -87,8 +87,9 @@ public class Dictionary {
 		}
 	}
 	
-	public void resetSlangWord() {
-		
+	public void resetDictionary() throws IOException {
+		FileIO.resetDictionary();
+		dictionary = FileIO.readDictionary();
 	}
 	
 	public String getRandomSlangWord() {
@@ -102,4 +103,6 @@ public class Dictionary {
 	public String getLineBySlangWord(String slangword) {
 		return slangword + "`" + String.join("| ", dictionary.get(slangword));
 	}
+	
+
 }

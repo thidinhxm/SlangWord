@@ -116,8 +116,25 @@ public class SlangWordController implements ActionListener {
 				JOptionPane.showMessageDialog(view, "Please enter correct slang word and definition");
 			}
 		}
-		else if (command.equals("Reset")) {
-			
+		else if (command.equals("Cancel")) {
+			((DictionaryPanel) view.getDictionaryView()).clearTextFieldSlang();
+		}
+		else if (command.equals("Reset Dictionary")) {
+			int choice = JOptionPane.showConfirmDialog(
+					view, 
+					"Do you really want to reset the dictionary?", 
+					"Confirm Reset Dictionary", 
+					JOptionPane.YES_NO_OPTION
+					);
+			if (choice == JOptionPane.YES_OPTION) {
+				try {
+					view.getDictionary().resetDictionary();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				JOptionPane.showMessageDialog(view, "Reset the dictionary successfully");
+			}
 		}
 	}
 

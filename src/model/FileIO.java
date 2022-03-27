@@ -111,6 +111,14 @@ public class FileIO {
 		Files.write(path, content.getBytes(charset));
 	}
 	
+	public static void resetDictionary() throws IOException {
+		Path pathDictionary = Paths.get(SLANG_WORD_FILE);
+		Path pathBackUp = Paths.get(BACKUP_SLANG_WORD_FILE);
+		Charset charset = StandardCharsets.UTF_8;
+		String content = new String(Files.readAllBytes(pathBackUp), charset);
+		Files.write(pathDictionary, content.getBytes(charset));
+	}
+	
 	public static void writeHistory(History history) throws IOException {
 		FileOutputStream fos = new FileOutputStream(new File(HISTORY_FILE));
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -130,4 +138,5 @@ public class FileIO {
 		ois.close();
 		return history;
 	}
+	
 }

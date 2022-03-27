@@ -191,13 +191,19 @@ public class DictionaryPanel extends JPanel {
 		btnAdd.addActionListener(action);
 		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnAdd.setBounds(638, 515, 104, 54);
-		this.add(btnAdd);
+		add(btnAdd);
 		
 		JButton btnReset = new JButton("Reset Dictionary");
 		btnReset.addActionListener(action);
 		btnReset.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnReset.setBounds(663, 26, 193, 54);
-		this.add(btnReset);
+		add(btnReset);
+		
+		JButton btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(action);
+		btnCancel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnCancel.setBounds(752, 594, 104, 54);
+		add(btnCancel);
 		
 		txtSlangWord = new JTextField("Slang Word:");
 		txtSlangWord.setEditable(false);
@@ -223,10 +229,6 @@ public class DictionaryPanel extends JPanel {
 		txtKeyword.setBounds(45, 27, 95, 54);
 		add(txtKeyword);
 		
-		JButton btnCancel = new JButton("Cancel");
-		btnCancel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnCancel.setBounds(752, 594, 104, 54);
-		add(btnCancel);
 	}
 	
 	public int search(String keyword, String searchType) {
@@ -284,5 +286,10 @@ public class DictionaryPanel extends JPanel {
 	
 	public String getDefinition() {
 		return textFieldDefinition.getText();
+	}
+	
+	public void clearTextFieldSlang() {
+		textFieldSlangWord.setText("");
+		textFieldDefinition.setText("");
 	}
 }
