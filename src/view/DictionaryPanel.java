@@ -175,9 +175,13 @@ public class DictionaryPanel extends JPanel {
 		tableModel.setRowCount(0);
 		if (searchType.equals("Slang Word")) {
 			  result = dictionaryModel.searchBySlangWord(keyword);
-			  for (HashMap.Entry<String, HashSet<String>> entry : result) {
-				  addSlangWordToTable(entry, tableModel.getRowCount() + 1);  
-			  }
+			  
+		}
+		else {
+			result = dictionaryModel.searchByDefinition(keyword);
+		}
+		for (HashMap.Entry<String, HashSet<String>> entry : result) {
+			addSlangWordToTable(entry, tableModel.getRowCount() + 1);  
 		}
 	}
 	

@@ -28,10 +28,23 @@ public class Dictionary {
 		return list;
 	}
 	
-//	public ArrayList<HashMap.Entry<String, String>> searchByDefinition(String definition) {
-//		return new HashMap<String, String>();
-//	}
-//	
+	public ArrayList<HashMap.Entry<String, HashSet<String>>> searchByDefinition(String keyword) {
+		ArrayList<HashMap.Entry<String, HashSet<String>>> list = new ArrayList<>();
+		
+		for (HashMap.Entry<String, HashSet<String>> entry : dictionary.entrySet()) {
+			HashSet<String> definitionList = new HashSet<>();
+			for (String definition : entry.getValue()) {
+				if (definition.toLowerCase().contains(keyword.toLowerCase())) {
+					definitionList.add(definition);
+				}
+			}
+			if (!definitionList.isEmpty()) {
+				list.add(new HashMap.SimpleEntry<String, HashSet<String>>(entry.getKey(), definitionList));
+			}
+		}
+		return list;
+	}
+	
 	public void addSlangWord(String slangWord, String definition) {
 		
 	}
