@@ -5,11 +5,9 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -17,9 +15,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-import controller.SlangWordController;
 import model.Dictionary;
 import model.SearchWord;
 
@@ -42,27 +41,7 @@ public class DictionaryPanel extends JPanel {
 		
 		this.dictionaryModel = dictionaryModel;
 		
-		JScrollPane scrollPaneDictionary = new JScrollPane();
-		scrollPaneDictionary.setBounds(45, 121, 811, 357);
-		this.add(scrollPaneDictionary);
 		
-		tableDictionary = new JTable();
-		tableDictionary.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"No", "Slang Word", "Definition"
-			}
-		));
-		tableDictionary.getColumnModel().getColumn(0).setPreferredWidth(5);
-		tableDictionary.getColumnModel().getColumn(1).setPreferredWidth(100);
-		tableDictionary.getColumnModel().getColumn(2).setPreferredWidth(500);
-		tableDictionary.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		tableDictionary.getTableHeader().setFont( new Font( "Tahoma" , Font.BOLD, 20 ));
-		tableDictionary.setRowHeight(25);
-		scrollPaneDictionary.setViewportView(tableDictionary);
-		tableModel = (DefaultTableModel) tableDictionary.getModel();
-		displayDictionary();
 		textFieldSearch = new JTextField("Enter keyword");
 		textFieldSearch.addFocusListener(new FocusAdapter() {
 			@Override
@@ -145,6 +124,42 @@ public class DictionaryPanel extends JPanel {
 		textFieldDefinition.setBounds(45, 594, 554, 54);
 		this.add(textFieldDefinition);
 		
+		JScrollPane scrollPaneDictionary = new JScrollPane();
+		scrollPaneDictionary.setBounds(45, 121, 811, 357);
+		this.add(scrollPaneDictionary);
+		
+		tableDictionary = new JTable();
+		tableDictionary.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"No", "Slang Word", "Definition"
+			}
+		));
+		tableDictionary.getColumnModel().getColumn(0).setPreferredWidth(5);
+		tableDictionary.getColumnModel().getColumn(1).setPreferredWidth(100);
+		tableDictionary.getColumnModel().getColumn(2).setPreferredWidth(500);
+		tableDictionary.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		tableDictionary.getTableHeader().setFont( new Font( "Tahoma" , Font.BOLD, 20 ));
+		tableDictionary.setRowHeight(25);
+		scrollPaneDictionary.setViewportView(tableDictionary);
+		tableModel = (DefaultTableModel) tableDictionary.getModel();
+		displayDictionary();
+		tableDictionary.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				// TODO Auto-generated method stub
+				String slangword = tableDictionary.getValueAt(tableDictionary.getSelectedRow(), 1).toString();
+				String definition = tableDictionary.getValueAt(tableDictionary.getSelectedRow(), 2).toString();
+				textFieldSlangWord.setText(slangword);
+				textFieldSlangWord.setForeground(Color.BLACK);
+				textFieldDefinition.setText(definition);
+				textFieldDefinition.setForeground(Color.BLACK);
+			}
+			
+		});
+		
 		JButton btnEdit = new JButton("Edit");
 		btnEdit.addActionListener(action);
 		btnEdit.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -171,7 +186,7 @@ public class DictionaryPanel extends JPanel {
 	}
 	
 	public int search(String keyword, String searchType) {
-		ArrayList<HashMap.Entry<String, HashSet<String>>> result = new ArrayList<>();
+		ArrayList<HashMap.Entry<String, ArrayList<String>>> result = new ArrayList<>();
 		tableModel.setRowCount(0);
 		if (searchType.equals("Slang Word")) {
 			  result = dictionaryModel.searchBySlangWord(keyword);
@@ -179,15 +194,16 @@ public class DictionaryPanel extends JPanel {
 		else {
 			result = dictionaryModel.searchByDefinition(keyword);
 		}
-		  
-		for (HashMap.Entry<String, HashSet<String>> entry : result) {
+		int size = 0;
+		for (HashMap.Entry<String, ArrayList<String>> entry : result) {
 			addSlangWordToTable(entry, tableModel.getRowCount() + 1);  
+			size += entry.getValue().size();
 		}
-		return  result.size();
+		return size;
 		
 	}
 	
-	public void addSlangWordToTable(HashMap.Entry<String, HashSet<String>> entry, int position) {
+	public void addSlangWordToTable(HashMap.Entry<String, ArrayList<String>> entry, int position) {
 		for (String definition : entry.getValue()) {
 			tableModel.addRow(new Object[] {
 					position++ + "",
@@ -199,7 +215,7 @@ public class DictionaryPanel extends JPanel {
 	
 	public void displayDictionary() {
 		tableModel.setRowCount(0);
-		for (HashMap.Entry<String, HashSet<String>> entry : dictionaryModel.getDictionary().entrySet()) {
+		for (HashMap.Entry<String, ArrayList<String>> entry : dictionaryModel.getDictionary().entrySet()) {
 			addSlangWordToTable(entry, tableDictionary.getRowCount() + 1);
 		}
 	}
@@ -211,5 +227,13 @@ public class DictionaryPanel extends JPanel {
 	
 	public String getSearchWord() {
 		return textFieldSearch.getText();
+	}
+	
+	public String getSlangWord() {
+		return textFieldSlangWord.getText();
+	}
+	
+	public String getDefinition() {
+		return textFieldDefinition.getText();
 	}
 }

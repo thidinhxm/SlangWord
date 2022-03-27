@@ -43,6 +43,10 @@ public class HistoryPanel extends JPanel {
 		));
 		tableHistory.getColumnModel().getColumn(0).setResizable(false);
 		tableHistory.getColumnModel().getColumn(0).setPreferredWidth(10);
+		tableHistory.getColumnModel().getColumn(1).setPreferredWidth(50);
+		tableHistory.getColumnModel().getColumn(2).setPreferredWidth(130);
+		tableHistory.getColumnModel().getColumn(3).setPreferredWidth(150);
+		tableHistory.getColumnModel().getColumn(4).setPreferredWidth(200);
 		tableHistory.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		tableHistory.getTableHeader().setFont( new Font( "Tahoma" , Font.BOLD, 20 ));
 		tableHistory.setRowHeight(25);

@@ -11,17 +11,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.ArrayList;
 
 public class FileIO {
 	private final static String SLANG_WORD_FILE = "dictionary.txt";
 	private final static String BACKUP_SLANG_WORD_FILE = "slang.txt";
 	private final static String HISTORY_FILE = "history.txt";
 	
-	public static HashMap<String, HashSet<String>> readDictionary() throws IOException {
-		HashMap<String, HashSet<String>> dictionary = new HashMap<>();
+	public static HashMap<String, ArrayList<String>> readDictionary() throws IOException {
+		HashMap<String, ArrayList<String>> dictionary = new HashMap<>();
 		File dictionaryFile = new File(SLANG_WORD_FILE);
 		dictionaryFile.createNewFile();
 		BufferedReader br = new BufferedReader(new FileReader(dictionaryFile));
@@ -35,7 +40,7 @@ public class FileIO {
 					wr.write(line + "\n");
 					String[] slang = line.split("`");
 					String[] definitionList = slang[1].split("| ");
-					HashSet<String> definitionSet = new HashSet<>();
+					ArrayList<String> definitionSet = new ArrayList<>();
 					for (String definition : definitionList) {
 						definitionSet.add(definition);
 					}
@@ -48,7 +53,7 @@ public class FileIO {
 			while (line != null) {
 				String[] slang = line.split("`");
 				String[] definitionList = slang[1].split("\\| ");
-				HashSet<String> definitionSet = new HashSet<>();
+				ArrayList<String> definitionSet = new ArrayList<>();
 				for (String definition : definitionList) {
 					definitionSet.add(definition);
 				}
@@ -59,7 +64,17 @@ public class FileIO {
 		}
 		return dictionary;
 	}
-
+	
+	public static void addNewDefinitionToFile(Dictionary dictionary, String slangword, String definition) throws IOException {
+		String oldLine = dictionary.getLineBySlangWord(slangword);
+		dictionary.addSlangWord(slangword, definition);
+		String newLine = dictionary.getLineBySlangWord(slangword);
+		Path path = Paths.get(SLANG_WORD_FILE);
+		Charset charset = StandardCharsets.UTF_8;
+		String content = new String(Files.readAllBytes(path), charset);
+		content = content.replaceFirst(oldLine, newLine);
+		Files.write(path, content.getBytes(charset));
+	}
 	
 	public static void writeHistory(History history) throws IOException {
 		FileOutputStream fos = new FileOutputStream(new File(HISTORY_FILE));

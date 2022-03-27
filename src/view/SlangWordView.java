@@ -13,6 +13,8 @@ import model.History;
 
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JTabbedPane;
@@ -20,6 +22,9 @@ import javax.swing.JTabbedPane;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 
 
@@ -55,8 +60,31 @@ public class SlangWordView extends JFrame {
 	 */
 	public SlangWordView() {
 		
+//		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		addWindowListener((WindowListener) new WindowAdapter() {
+//		    @Override
+//		    public void windowClosing(WindowEvent we)
+//		    { 
+//		        String ObjButtons[] = {"Yes","No"};
+//		        int PromptResult = JOptionPane.showOptionDialog(
+//		        		null,
+//		        		"Are you sure you want to exit?",
+//		        		"Slang Word Dictionary",
+//		        		JOptionPane.DEFAULT_OPTION,
+//		        		JOptionPane.WARNING_MESSAGE,
+//		        		null,
+//		        		ObjButtons,
+//		        		ObjButtons[1]
+//		        		);
+//		        if(PromptResult==JOptionPane.YES_OPTION)
+//		        {
+//		            System.exit(0);
+//		        }
+//		    }
+//		});
 		setBounds(100, 100, 1140, 750);
+		setTitle("Slang Word");
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -218,4 +246,10 @@ public class SlangWordView extends JFrame {
 	public History getHistory() {
 		return historyModel;
 	}
+	
+	public Dictionary getDictionary() {
+		return dictionaryModel;
+	}
+	
+	
 }
