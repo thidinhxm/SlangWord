@@ -5,13 +5,22 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controller.SlangWordController;
+import model.Dictionary;
+import model.FileIO;
+import model.History;
+
 import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JTabbedPane;
+
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 
 public class SlangWordView extends JFrame {
@@ -21,6 +30,10 @@ public class SlangWordView extends JFrame {
 	private JLabel lblMenuDictionary;
 	private JLabel lblMenuHistory;
 	private JLabel lblMenuGame;
+	private Dictionary dictionaryModel;
+	private History historyModel;
+	private JPanel panelDictionary;
+	private JPanel panelHistory;
 	/**
 	 * Launch the application.
 	 */
@@ -49,6 +62,8 @@ public class SlangWordView extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		ActionListener action = new SlangWordController(this);
+		
 		JPanel panelTitle = new TitlePanel();
 		contentPane.add(panelTitle);
 		
@@ -57,10 +72,17 @@ public class SlangWordView extends JFrame {
 		tabbedPaneMenu.setEnabled(false);
 		contentPane.add(tabbedPaneMenu);
 		
-		JPanel panelDictionary = new DictionaryPanel();
+		dictionaryModel = new Dictionary();
+		panelDictionary = new DictionaryPanel(dictionaryModel, action);
 		tabbedPaneMenu.addTab("Dictionary", null, panelDictionary, null);
 		
-		JPanel panelHistory = new HistoryPanel();
+		try {
+			historyModel = FileIO.readHistory();
+		} catch (ClassNotFoundException | IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		panelHistory = new HistoryPanel(historyModel);
 		tabbedPaneMenu.addTab("Show History", null, panelHistory, null);
 		
 		JPanel panelGame = new GamePanel();
@@ -183,5 +205,17 @@ public class SlangWordView extends JFrame {
 		lblMenuDictionary.setForeground(Color.BLACK);
 		lblMenuHistory.setForeground(Color.BLACK);
 		lblMenuGame.setForeground(Color.BLACK);
+	}
+	
+	public JPanel getDictionaryView() {
+		return panelDictionary;
+	}
+	
+	public JPanel getHistoryView() {
+		return panelHistory;
+	}
+	
+	public History getHistory() {
+		return historyModel;
 	}
 }

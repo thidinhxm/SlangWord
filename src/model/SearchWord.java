@@ -1,22 +1,19 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class SearchWord {
-	public static enum SearchType {
-		DEFINITION,
-		SLANGWORD
-	}
+public class SearchWord implements Serializable {
 	private String keyword;
 	private String result;
-	private SearchType type;
+	private String type;
 	private LocalDateTime time;
 	
-	public SearchWord(String keyword, SearchType type, LocalDateTime time) {
-		super();
+	public SearchWord(String keyword, String type, LocalDateTime time, String result) {
 		this.keyword = keyword;
 		this.type = type;
 		this.time = time;
+		this.result = result;
 	}
 
 	public String getKeyword() {
@@ -27,11 +24,11 @@ public class SearchWord {
 		this.keyword = keyword;
 	}
 
-	public SearchType getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(SearchType type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 

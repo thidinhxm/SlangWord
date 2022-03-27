@@ -3,10 +3,15 @@ package model;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -53,5 +58,26 @@ public class FileIO {
 			br.close();
 		}
 		return dictionary;
+	}
+
+	
+	public static void writeHistory(History history) throws IOException {
+		FileOutputStream fos = new FileOutputStream(new File(HISTORY_FILE));
+		ObjectOutputStream oos = new ObjectOutputStream(fos);
+		oos.writeObject(history);
+		oos.close();
+	}
+	
+	public static History readHistory() throws IOException, ClassNotFoundException {
+		File historyFile = new File(HISTORY_FILE);
+		historyFile.createNewFile();
+		if (historyFile.length() == 0) {
+			return new History();
+		}
+		FileInputStream fis = new FileInputStream(historyFile);
+		ObjectInputStream ois = new ObjectInputStream(fis);
+		History history = (History) ois.readObject(); 
+		ois.close();
+		return history;
 	}
 }

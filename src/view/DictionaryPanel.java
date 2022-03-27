@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,8 +19,9 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import controller.DictionaryController;
+import controller.SlangWordController;
 import model.Dictionary;
+import model.SearchWord;
 
 public class DictionaryPanel extends JPanel {
 
@@ -32,13 +35,12 @@ public class DictionaryPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public DictionaryPanel() {
+	public DictionaryPanel(Dictionary dictionaryModel, ActionListener action) {
 		this.setForeground(Color.WHITE);
 		this.setBackground(new Color(244, 164, 96));
 		this.setLayout(null);
 		
-		dictionaryModel = new Dictionary();
-		ActionListener action = new DictionaryController(this); 
+		this.dictionaryModel = dictionaryModel;
 		
 		JScrollPane scrollPaneDictionary = new JScrollPane();
 		scrollPaneDictionary.setBounds(45, 121, 811, 357);
@@ -168,21 +170,21 @@ public class DictionaryPanel extends JPanel {
 		this.add(btnReset);
 	}
 	
-	public void search() {
-		String searchType = "" + comboBoxSearchType.getSelectedItem();
-		String keyword = textFieldSearch.getText();
+	public int search(String keyword, String searchType) {
 		ArrayList<HashMap.Entry<String, HashSet<String>>> result = new ArrayList<>();
 		tableModel.setRowCount(0);
 		if (searchType.equals("Slang Word")) {
 			  result = dictionaryModel.searchBySlangWord(keyword);
-			  
 		}
 		else {
 			result = dictionaryModel.searchByDefinition(keyword);
 		}
+		  
 		for (HashMap.Entry<String, HashSet<String>> entry : result) {
 			addSlangWordToTable(entry, tableModel.getRowCount() + 1);  
 		}
+		return  result.size();
+		
 	}
 	
 	public void addSlangWordToTable(HashMap.Entry<String, HashSet<String>> entry, int position) {
@@ -200,5 +202,14 @@ public class DictionaryPanel extends JPanel {
 		for (HashMap.Entry<String, HashSet<String>> entry : dictionaryModel.getDictionary().entrySet()) {
 			addSlangWordToTable(entry, tableDictionary.getRowCount() + 1);
 		}
+	}
+
+	
+	public String getSearchType() {
+		return "" + comboBoxSearchType.getSelectedItem();
+	}
+	
+	public String getSearchWord() {
+		return textFieldSearch.getText();
 	}
 }
