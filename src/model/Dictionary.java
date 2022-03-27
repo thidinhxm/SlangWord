@@ -77,6 +77,16 @@ public class Dictionary {
 		}	
 	}
 	
+	public void deleteSlangWord(String slangword, String definition) {
+		ArrayList<String> definitionList = dictionary.get(slangword);
+		if (definitionList.size() == 1) {
+			dictionary.remove(slangword);
+		}
+		else {
+			definitionList.remove(definition);
+		}
+	}
+	
 	public void resetSlangWord() {
 		
 	}

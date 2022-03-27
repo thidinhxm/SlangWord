@@ -94,7 +94,27 @@ public class SlangWordController implements ActionListener {
 			}
 		}
 		else if (command.equals("Delete")) {
-			
+			String slangword = ((DictionaryPanel) view.getDictionaryView()).getSlangWord().toUpperCase().trim();
+			String definition = ((DictionaryPanel) view.getDictionaryView()).getDefinition().trim();
+			if (view.getDictionary().checkDefinitionExisted(slangword, definition)) {
+				int choice = JOptionPane.showConfirmDialog(
+						view, 
+						"Do you really want to delete the slang word with this definition?", 
+						"Confirm Delete Slang Word", 
+						JOptionPane.YES_NO_OPTION
+						);
+				if (choice == JOptionPane.YES_OPTION) {
+					try {
+						FileIO.deleteSlangWordFromFile(view.getDictionary(), slangword, definition);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					JOptionPane.showMessageDialog(view, "Delete the slang word with this definition successfully");
+				}
+			} else {
+				JOptionPane.showMessageDialog(view, "Please enter correct slang word and definition");
+			}
 		}
 		else if (command.equals("Reset")) {
 			

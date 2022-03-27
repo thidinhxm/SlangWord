@@ -94,6 +94,23 @@ public class FileIO {
 		Files.write(path, content.getBytes(charset));
 	}
 	
+	public static void deleteSlangWordFromFile(Dictionary dictionary, String slangword, String definition) throws IOException {
+		String oldLine = dictionary.getLineBySlangWord(slangword);
+		String newLine = "";
+		dictionary.deleteSlangWord(slangword, definition);
+		if (oldLine.contains("|")) {
+			newLine = dictionary.getLineBySlangWord(slangword);
+		}
+		else {
+			oldLine += "\n";
+		}
+		Path path = Paths.get(SLANG_WORD_FILE);
+		Charset charset = StandardCharsets.UTF_8;
+		String content = new String(Files.readAllBytes(path), charset);
+		content = content.replaceFirst(oldLine, newLine);
+		Files.write(path, content.getBytes(charset));
+	}
+	
 	public static void writeHistory(History history) throws IOException {
 		FileOutputStream fos = new FileOutputStream(new File(HISTORY_FILE));
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
