@@ -61,7 +61,7 @@ public class SlangWordController implements ActionListener {
 					} else {
 						int choice = JOptionPane.showConfirmDialog(
 								view, 
-								"The slang word existed. Do you want to add new definition?", 
+								"The slang word existed. Do you want to add a new definition?", 
 								"Notification", 
 								JOptionPane.YES_NO_OPTION
 								);
@@ -307,12 +307,17 @@ public class SlangWordController implements ActionListener {
 					}
 				}
 			} else {
-				JOptionPane.showMessageDialog(view, "No search to clear");
+				JOptionPane.showMessageDialog(view, "No search to clear!");
 			}
 			
 		}
 		else if (command.equals("Clear Search")) {
-			
+			try {
+				((HistoryPanel) view.getHistoryView()).clearSearch();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 

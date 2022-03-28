@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import javax.swing.JLabel;
@@ -49,6 +50,10 @@ public class HistoryPanel extends JPanel {
 			}
 		));
 		tableHistory.getColumnModel().getColumn(0).setResizable(false);
+		tableHistory.getColumnModel().getColumn(1).setResizable(false);
+		tableHistory.getColumnModel().getColumn(2).setResizable(false);
+		tableHistory.getColumnModel().getColumn(3).setResizable(false);
+		tableHistory.getColumnModel().getColumn(4).setResizable(false);
 		tableHistory.getColumnModel().getColumn(0).setPreferredWidth(10);
 		tableHistory.getColumnModel().getColumn(1).setPreferredWidth(50);
 		tableHistory.getColumnModel().getColumn(2).setPreferredWidth(130);
@@ -113,13 +118,28 @@ public class HistoryPanel extends JPanel {
 		lblKeywordsSearched.setText(txt);
 	}
 	
-	public void clearSearch() {
+	public void clearSearch() throws IOException {
 		int row = tableHistory.getSelectedRow();
 		if (row < 0) {
-			JOptionPane.showMessageDialog(this, "You have not chosen search row");
+			JOptionPane.showMessageDialog(this, "You have not chosen a search row");
 		}
 		else {
+			String keyword = tableModel.getValueAt(row, 1) + "";
+			String searchType = tableModel.getValueAt(row, 2) + "";
+			String result = tableModel.getValueAt(row, 3) + "";
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+			String time = tableModel.getValueAt(row, 4) + "";
 			
+			for (SearchWord e : historyModel.getHistory()) {
+				String eTime = e.getTime().format(formatter);
+				if (e.getKeyword().equals(keyword) && e.getType().equals(searchType) && e.getResult().equals(result) && eTime.equals(time)) {
+					historyModel.getHistory().remove(e);
+					break;
+				}
+			}
+			FileIO.writeHistory(historyModel);
+			tableModel.removeRow(row);
+			JOptionPane.showMessageDialog(this, "Clear a search successfully");
 		}
 	}
 
