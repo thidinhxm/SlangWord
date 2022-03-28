@@ -111,7 +111,7 @@ public class SlangWordView extends JFrame {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		panelHistory = new HistoryPanel(historyModel);
+		panelHistory = new HistoryPanel(historyModel, action);
 		tabbedPaneMenu.addTab("Show History", null, panelHistory, null);
 		
 		panelGame = new GamePanel(action);

@@ -186,4 +186,10 @@ public class FileIO {
 		bw.close();
 	}
 	
+	public static void clearHistory() throws IOException {
+		File historyFile = new File(HISTORY_FILE);
+		historyFile.delete();
+		historyFile.createNewFile();
+	}
+	
 }

@@ -29,17 +29,23 @@ public class SlangWordController implements ActionListener {
 		String command = e.getActionCommand();
 //		JOptionPane.showMessageDialog(view, "You have just enter " + command);
 		if (command.equals("Search")) {
-			String keyword = ((DictionaryPanel) view.getDictionaryView()).getSearchWord();
-			String searchType = ((DictionaryPanel) view.getDictionaryView()).getSearchType();
-			int result = ((DictionaryPanel) view.getDictionaryView()).search(keyword, searchType);
-			LocalDateTime now = LocalDateTime.now(); 
-			SearchWord word = new SearchWord(keyword, searchType, now, result + " results found");
-			((HistoryPanel) view.getHistoryView()).addSearchWordToHistoryTable(word);
-			try {
-				view.getHistory().addSearchWordToHistory(word);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			String keyword = ((DictionaryPanel) view.getDictionaryView()).getSearchWord().trim();
+			if (keyword.length() > 0) {
+				String searchType = ((DictionaryPanel) view.getDictionaryView()).getSearchType();
+				int result = ((DictionaryPanel) view.getDictionaryView()).search(keyword, searchType);
+				LocalDateTime now = LocalDateTime.now(); 
+				SearchWord word = new SearchWord(keyword, searchType, now, result + " results found");
+				try {
+					view.getHistory().addSearchWordToHistory(word);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				((HistoryPanel) view.getHistoryView()).addSearchWordToHistoryTable(word);
+				((HistoryPanel) view.getHistoryView()).setLblKeywordsSearched(view.getHistory().getHistory().size() + " Searched");
+			}
+			else {
+				JOptionPane.showMessageDialog(view, "Please enter keyword before click Search");
 			}
 		}
 		else if (command.equals("Add")) {
@@ -282,6 +288,30 @@ public class SlangWordController implements ActionListener {
 				((GamePanel) view.getGameView()).setVisibleQuestion(false);
 				((GamePanel) view.getGameView()).setVisiblePlayNowBtn(true);
 			}
+			
+		}
+		else if (command.equals("Clear History")) {
+			if (view.getHistory().getHistory().size() > 0) {
+				int choice = JOptionPane.showConfirmDialog(
+						view, 
+						"Are you sure to clear history?", 
+						"Confirm clear history", 
+						JOptionPane.YES_NO_OPTION
+						);
+				if (choice == JOptionPane.YES_OPTION) {
+					try {
+						((HistoryPanel) view.getHistoryView()).clearHistory();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			} else {
+				JOptionPane.showMessageDialog(view, "No search to clear");
+			}
+			
+		}
+		else if (command.equals("Clear Search")) {
 			
 		}
 	}

@@ -84,6 +84,7 @@ public class DictionaryPanel extends JPanel {
 				if (textFieldSearch.getText().length() == 0) {
 					displayDictionary();
 				}
+
 			}
 			
 		});

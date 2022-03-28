@@ -2,28 +2,35 @@ package view;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import model.FileIO;
 import model.History;
 import model.SearchWord;
+import javax.swing.JButton;
 
 public class HistoryPanel extends JPanel {
 
 	private JTable tableHistory;
 	private DefaultTableModel tableModel;
 	private History historyModel;
+	private JButton btnClearHistory;
+	private JButton btnClearSearch;
+	private JLabel lblKeywordsSearched;
 	/**
 	 * Create the panel.
 	 */
-	public HistoryPanel(History historyModel) {
+	public HistoryPanel(History historyModel, ActionListener action) {
 		this.setBackground(new Color(244, 164, 96));
 		this.setLayout(null);
 		
@@ -55,7 +62,7 @@ public class HistoryPanel extends JPanel {
 		scrollPaneHistory.setViewportView(tableHistory);
 		displayHistory();
 		
-		JLabel lblKeywordsSearched = new JLabel(historyModel.getHistory().size() + " searched");
+		lblKeywordsSearched = new JLabel(historyModel.getHistory().size() + " Searched");
 		lblKeywordsSearched.setFont(new Font("Tahoma", Font.ITALIC, 20));
 		lblKeywordsSearched.setBounds(135, 22, 219, 54);
 		add(lblKeywordsSearched);
@@ -64,6 +71,18 @@ public class HistoryPanel extends JPanel {
 		lblHistory.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblHistory.setBounds(50, 22, 75, 54);
 		add(lblHistory);
+		
+		btnClearHistory = new JButton("Clear History");
+		btnClearHistory.addActionListener(action);
+		btnClearHistory.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnClearHistory.setBounds(491, 22, 175, 54);
+		add(btnClearHistory);
+		
+		btnClearSearch = new JButton("Clear Search");
+		btnClearSearch.addActionListener(action);
+		btnClearSearch.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnClearSearch.setBounds(681, 22, 175, 54);
+		add(btnClearSearch);
 	}
 	
 	public void addSearchWordToHistoryTable(SearchWord word) {
@@ -80,6 +99,27 @@ public class HistoryPanel extends JPanel {
 	public void displayHistory() {
 		for (SearchWord word : historyModel.getHistory()) {
 			addSearchWordToHistoryTable(word);
+		}
+	}
+	
+	public void clearHistory() throws IOException {
+		tableModel.setRowCount(0);
+		FileIO.clearHistory();
+		historyModel = new History();
+		setLblKeywordsSearched("0 Searched");
+	}
+	
+	public void setLblKeywordsSearched(String txt) {
+		lblKeywordsSearched.setText(txt);
+	}
+	
+	public void clearSearch() {
+		int row = tableHistory.getSelectedRow();
+		if (row < 0) {
+			JOptionPane.showMessageDialog(this, "You have not chosen search row");
+		}
+		else {
+			
 		}
 	}
 
