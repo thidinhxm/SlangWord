@@ -61,29 +61,29 @@ public class SlangWordView extends JFrame {
 	 */
 	public SlangWordView() {
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-//		addWindowListener((WindowListener) new WindowAdapter() {
-//		    @Override
-//		    public void windowClosing(WindowEvent we)
-//		    { 
-//		        String ObjButtons[] = {"Yes","No"};
-//		        int PromptResult = JOptionPane.showOptionDialog(
-//		        		null,
-//		        		"Are you sure you want to exit?",
-//		        		"Slang Word Dictionary",
-//		        		JOptionPane.DEFAULT_OPTION,
-//		        		JOptionPane.WARNING_MESSAGE,
-//		        		null,
-//		        		ObjButtons,
-//		        		ObjButtons[1]
-//		        		);
-//		        if(PromptResult==JOptionPane.YES_OPTION)
-//		        {
-//		            System.exit(0);
-//		        }
-//		    }
-//		});
+//		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener((WindowListener) new WindowAdapter() {
+		    @Override
+		    public void windowClosing(WindowEvent we)
+		    { 
+		        String ObjButtons[] = {"Yes","No"};
+		        int choice = JOptionPane.showOptionDialog(
+		        		null,
+		        		"Are you sure you want to exit?",
+		        		"Slang Word Dictionary",
+		        		JOptionPane.DEFAULT_OPTION,
+		        		JOptionPane.WARNING_MESSAGE,
+		        		null,
+		        		ObjButtons,
+		        		ObjButtons[1]
+		        		);
+		        if(choice == JOptionPane.YES_OPTION)
+		        {
+		            System.exit(0);
+		        }
+		    }
+		});
 		setBounds(100, 100, 1140, 750);
 		setTitle("Slang Word");
 		contentPane = new JPanel();

@@ -27,6 +27,7 @@ public class FileIO {
 	private final static String BACKUP_SLANG_WORD_FILE = "slang.txt";
 	private final static String HISTORY_FILE = "history.txt";
 	private final static String RANDOM_SLANGWORD_FILE = "random.txt";
+	private final static String MAX_SCORE_FILE = "max_score.txt";
 	
 	public static HashMap<String, ArrayList<String>> readDictionary() throws IOException {
 		HashMap<String, ArrayList<String>> dictionary = new HashMap<>();
@@ -163,6 +164,26 @@ public class FileIO {
 		randomSlangWord += br.readLine();
 		br.close();
 		return randomSlangWord;
+	}
+	
+	public static int readMaxScore() throws IOException {
+		File maxScoreFile = new File(MAX_SCORE_FILE);
+		maxScoreFile.createNewFile();
+		if (maxScoreFile.length() == 0) {
+			return 0;
+		}
+		BufferedReader br = new BufferedReader(new FileReader(maxScoreFile));
+		int maxScore = Integer.parseInt(br.readLine());
+		br.close();
+		return maxScore;
+	}
+	
+	public static void writeMaxScore(int maxScore) throws IOException {
+		File maxScoreFile = new File(MAX_SCORE_FILE);
+		maxScoreFile.createNewFile();
+		BufferedWriter bw = new BufferedWriter(new FileWriter(maxScoreFile));
+		bw.write(maxScore + "");
+		bw.close();
 	}
 	
 }

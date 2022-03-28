@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
@@ -17,6 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import model.Dictionary;
+import model.FileIO;
 
 public class GamePanel extends JPanel {
 
@@ -35,13 +37,20 @@ public class GamePanel extends JPanel {
 	private JButton btnPlayNow;
 	private JButton btnNextQuestion;
 	private int maxScore;
+	private int yourScore;
 	/**
 	 * Create the panel.
 	 */
 	public GamePanel(ActionListener action) {
 		this.setBackground(new Color(244, 164, 96));
 		this.setLayout(null);
-		
+		try {
+			maxScore = FileIO.readMaxScore();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		yourScore = 0;
 		JButton btnRandom = new JButton("Random");
 		btnRandom.addActionListener(action);
 		btnRandom.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -125,7 +134,7 @@ public class GamePanel extends JPanel {
 		lblYourScore.setBounds(581, 19, 124, 54);
 		panelQuestion.add(lblYourScore);
 		
-		textFieldYourScore = new JTextField("0");
+		textFieldYourScore = new JTextField(yourScore + "");
 		textFieldYourScore.setHorizontalAlignment(SwingConstants.CENTER);
 		textFieldYourScore.setForeground(Color.GRAY);
 		textFieldYourScore.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -139,7 +148,7 @@ public class GamePanel extends JPanel {
 		lblMaxScore.setBounds(629, 276, 126, 54);
 		add(lblMaxScore);
 		
-		textFieldMaxScore = new JTextField("0");
+		textFieldMaxScore = new JTextField(maxScore + "");
 		textFieldMaxScore.setHorizontalAlignment(SwingConstants.CENTER);
 		textFieldMaxScore.setForeground(Color.GRAY);
 		textFieldMaxScore.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -199,9 +208,24 @@ public class GamePanel extends JPanel {
 					showDialogAnswer("Wrong Answer! Your score will be reseted");
 					setEnabledAnswerBtn(false);
 					setEnabledNextQuestionBtn(true);
+					yourScore = 0;
+					textFieldYourScore.setText(yourScore + "");
 				} else {
 					showDialogAnswer("Correct Answer! Your score will increase");
-					setEnabledAnswerBtn(true);
+					++yourScore;
+					textFieldYourScore.setText(yourScore + "");
+					if (yourScore > maxScore) {
+						maxScore = yourScore;
+						textFieldMaxScore.setText(maxScore + "");
+						try {
+							FileIO.writeMaxScore(maxScore);
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					setEnabledAnswerBtn(false);
+					setEnabledNextQuestionBtn(true);
 				}
 			}
 			
