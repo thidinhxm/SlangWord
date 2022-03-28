@@ -39,6 +39,7 @@ public class SlangWordView extends JFrame {
 	private History historyModel;
 	private JPanel panelDictionary;
 	private JPanel panelHistory;
+	private JPanel panelGame;
 	/**
 	 * Launch the application.
 	 */
@@ -60,8 +61,8 @@ public class SlangWordView extends JFrame {
 	 */
 	public SlangWordView() {
 		
-//		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 //		addWindowListener((WindowListener) new WindowAdapter() {
 //		    @Override
 //		    public void windowClosing(WindowEvent we)
@@ -113,7 +114,7 @@ public class SlangWordView extends JFrame {
 		panelHistory = new HistoryPanel(historyModel);
 		tabbedPaneMenu.addTab("Show History", null, panelHistory, null);
 		
-		JPanel panelGame = new GamePanel();
+		panelGame = new GamePanel(action);
 		tabbedPaneMenu.addTab("Game", null, panelGame, null);
 		
 		JPanel panelAboutMe = new AboutMePanel();
@@ -241,6 +242,10 @@ public class SlangWordView extends JFrame {
 	
 	public JPanel getHistoryView() {
 		return panelHistory;
+	}
+	
+	public JPanel getGameView() {
+		return panelGame;
 	}
 	
 	public History getHistory() {

@@ -3,6 +3,8 @@ package model;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Random;
 
 public class Dictionary {
 	private HashMap<String, ArrayList<String>> dictionary;
@@ -93,7 +95,11 @@ public class Dictionary {
 	}
 	
 	public String getRandomSlangWord() {
-		return "";
+		Random random = new Random();
+		int size = dictionary.keySet().size();
+		int randomPosition = random.nextInt(size);
+		return (String) dictionary.keySet().toArray()[randomPosition];
+		
 	}
 	
 	public HashMap<String, ArrayList<String>> getDictionary() {
@@ -104,5 +110,55 @@ public class Dictionary {
 		return slangword + "`" + String.join("| ", dictionary.get(slangword));
 	}
 	
-
+	public String getDefinitionString(String slangword) {
+		return String.join("| ", dictionary.get(slangword));
+	}
+	
+	
+	// [Q, CA, WA1, WA2, WA3, posA, posB, posC, posD]
+	public ArrayList<String> getRandomQuestionAndAnswerSlangWord() {
+		ArrayList<String> result = new ArrayList<>();
+		String slangword = getRandomSlangWord();
+		String question = "What definition for this slang word \"" + slangword + "\"?"; 
+		result.add(question);
+		result.add(getDefinitionString(slangword));
+		result.add(getDefinitionString(getRandomSlangWord()));
+		result.add(getDefinitionString(getRandomSlangWord()));
+		result.add(getDefinitionString(getRandomSlangWord()));
+		Random random = new Random();
+		HashSet<Integer> posAnswer = new HashSet<>();
+		for (int i = 0; i < 4; i++) {
+			int pos = 0;
+			do {
+				pos = random.nextInt(4) + 1;
+			} while(posAnswer.contains(pos));
+			
+			posAnswer.add(pos);
+			result.add(pos + "");
+		}
+		return result;
+	}
+	
+	public ArrayList<String> getRandomQuestionAndAnswerDefinition() {
+		ArrayList<String> result = new ArrayList<>();
+		String slangword = getRandomSlangWord();
+		String question = "What slang word for this definition \"" + getDefinitionString(slangword) + "\"?";
+		result.add(question);
+		result.add(slangword);
+		result.add(getRandomSlangWord());
+		result.add(getRandomSlangWord());
+		result.add(getRandomSlangWord());
+		Random random = new Random();
+		HashSet<Integer> posAnswer = new HashSet<>();
+		for (int i = 0; i < 4; i++) {
+			int pos = 0;
+			do {
+				pos = random.nextInt(4) + 1;
+			} while(posAnswer.contains(pos));
+			
+			posAnswer.add(pos);
+			result.add(pos + "");
+		}
+		return result;
+	}
 }

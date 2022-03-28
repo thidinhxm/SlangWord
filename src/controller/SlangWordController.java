@@ -3,7 +3,11 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JOptionPane;
 
@@ -11,6 +15,7 @@ import model.FileIO;
 import model.SearchWord;
 import view.DictionaryPanel;
 import view.HistoryPanel;
+import view.GamePanel;
 import view.SlangWordView;
 
 public class SlangWordController implements ActionListener {
@@ -22,7 +27,7 @@ public class SlangWordController implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
-//		JOptionPane.showMessageDialog(dictionaryView, "You have just enter " + command);
+//		JOptionPane.showMessageDialog(view, "You have just enter " + command);
 		if (command.equals("Search")) {
 			String keyword = ((DictionaryPanel) view.getDictionaryView()).getSearchWord();
 			String searchType = ((DictionaryPanel) view.getDictionaryView()).getSearchType();
@@ -135,6 +140,102 @@ public class SlangWordController implements ActionListener {
 				}
 				JOptionPane.showMessageDialog(view, "Reset the dictionary successfully");
 			}
+		}
+		else if (command.equals("Random")) {
+			String oldRandomSlangWordText = "";
+			try {
+				oldRandomSlangWordText = FileIO.readRandomSlangWordThisDay();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if (oldRandomSlangWordText.length() > 0) {
+				String oldSlangWord = oldRandomSlangWordText.split("\n")[0];
+				String time = oldRandomSlangWordText.split("\n")[1].split(" ")[0];
+				if (time.length() > 0) {
+					DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+					Date now = new Date();
+					String nowString = dateFormat.format(now);
+					if (nowString.contains(time)) {
+						((GamePanel) view.getGameView()).setTextRandomSlangWord(oldSlangWord, view.getDictionary().getDefinitionString(oldSlangWord));
+					}
+					else {
+						String randomSlangWord = view.getDictionary().getRandomSlangWord();
+						String randomDefintion = view.getDictionary().getDefinitionString(randomSlangWord);
+						((GamePanel) view.getGameView()).setTextRandomSlangWord(randomSlangWord, randomDefintion);
+						try {
+							FileIO.writeRandomSlangWordThisDay(randomSlangWord);
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				}
+				else {
+					String randomSlangWord = view.getDictionary().getRandomSlangWord();
+					String randomDefintion = view.getDictionary().getDefinitionString(randomSlangWord);
+					((GamePanel) view.getGameView()).setTextRandomSlangWord(randomSlangWord, randomDefintion);
+					try {
+						FileIO.writeRandomSlangWordThisDay(randomSlangWord);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+			else {
+				String randomSlangWord = view.getDictionary().getRandomSlangWord();
+				String randomDefintion = view.getDictionary().getDefinitionString(randomSlangWord);
+				((GamePanel) view.getGameView()).setTextRandomSlangWord(randomSlangWord, randomDefintion);
+				try {
+					FileIO.writeRandomSlangWordThisDay(randomSlangWord);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
+		}
+		else if (command.equals("Play Now")) {
+			ArrayList<String> questionAndAnswerList = null;
+			String typeGame = ((GamePanel) view.getGameView()).getTypeGame();
+			if (typeGame.equals("Slang Word")) {
+				questionAndAnswerList = view.getDictionary().getRandomQuestionAndAnswerSlangWord();
+			}
+			else {
+				questionAndAnswerList = view.getDictionary().getRandomQuestionAndAnswerDefinition();
+			}
+			
+			((GamePanel) view.getGameView()).createQuestionAndAnwser(questionAndAnswerList);
+			((GamePanel) view.getGameView()).setVisibleQuestion(true);
+			((GamePanel) view.getGameView()).setEnabledNextQuestionBtn(false);
+			((GamePanel) view.getGameView()).setVisiblePlayNowBtn(false);
+		}
+		else if (command.equals("Next Question")) {
+			((GamePanel) view.getGameView()).setEnabledAnswerBtn(true);
+			ArrayList<String> questionAndAnswerList = null;
+			String typeGame = ((GamePanel) view.getGameView()).getTypeGame();
+			if (typeGame.equals("Slang Word")) {
+				questionAndAnswerList = view.getDictionary().getRandomQuestionAndAnswerSlangWord();
+			}
+			else {
+				questionAndAnswerList = view.getDictionary().getRandomQuestionAndAnswerDefinition();
+			}
+			((GamePanel) view.getGameView()).createQuestionAndAnwser(questionAndAnswerList);
+			((GamePanel) view.getGameView()).setEnabledNextQuestionBtn(false);
+		}
+		else if (command.equals("End")) {
+			int choice = JOptionPane.showConfirmDialog(
+					view, 
+					"Do you really want to end this game?", 
+					"Confirm end game", 
+					JOptionPane.YES_NO_OPTION
+					);
+			if (choice == JOptionPane.YES_OPTION) {
+				((GamePanel) view.getGameView()).setVisibleQuestion(false);
+				((GamePanel) view.getGameView()).setVisiblePlayNowBtn(true);
+			}
+			
 		}
 	}
 

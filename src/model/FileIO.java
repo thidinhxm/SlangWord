@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -16,14 +15,18 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.ArrayList;
 
 public class FileIO {
 	private final static String SLANG_WORD_FILE = "dictionary.txt";
 	private final static String BACKUP_SLANG_WORD_FILE = "slang.txt";
 	private final static String HISTORY_FILE = "history.txt";
+	private final static String RANDOM_SLANGWORD_FILE = "random.txt";
 	
 	public static HashMap<String, ArrayList<String>> readDictionary() throws IOException {
 		HashMap<String, ArrayList<String>> dictionary = new HashMap<>();
@@ -137,6 +140,29 @@ public class FileIO {
 		History history = (History) ois.readObject(); 
 		ois.close();
 		return history;
+	}
+	
+	public static void writeRandomSlangWordThisDay(String slangword) throws IOException {
+		File randomFile = new File(RANDOM_SLANGWORD_FILE);
+		randomFile.createNewFile();
+		BufferedWriter bw = new BufferedWriter(new FileWriter(randomFile));
+		bw.write(slangword + "\n");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date = new Date();
+		bw.write(dateFormat.format(date));
+		bw.close();
+	}
+	
+	public static String readRandomSlangWordThisDay() throws IOException {
+		String randomSlangWord = "";
+		File randomFile = new File(RANDOM_SLANGWORD_FILE);
+		randomFile.createNewFile();
+		BufferedReader br = new BufferedReader(new FileReader(randomFile));
+		randomSlangWord += br.readLine();
+		randomSlangWord += "\n";
+		randomSlangWord += br.readLine();
+		br.close();
+		return randomSlangWord;
 	}
 	
 }
