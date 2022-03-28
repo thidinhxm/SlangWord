@@ -62,11 +62,13 @@ public class SlangWordController implements ActionListener {
 						if (choice == JOptionPane.YES_OPTION) {
 							try {
 								FileIO.addNewDefinitionToFile(view.getDictionary(), slangword, definition);
+								
 							} catch (IOException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 							JOptionPane.showMessageDialog(view, "Add a new definition successfully");
+							((DictionaryPanel) view.getDictionaryView()).displayDictionary();
 						}
 					}
 				} else {
@@ -78,6 +80,7 @@ public class SlangWordController implements ActionListener {
 						e1.printStackTrace();
 					}
 					JOptionPane.showMessageDialog(view, "Add a new slang word successfully");
+					((DictionaryPanel) view.getDictionaryView()).displayDictionary();
 				}
 				
 			}
@@ -85,15 +88,46 @@ public class SlangWordController implements ActionListener {
 		else if (command.equals("Edit")) {
 			String slangword = ((DictionaryPanel) view.getDictionaryView()).getSlangWord().toUpperCase().trim();
 			String definition = ((DictionaryPanel) view.getDictionaryView()).getDefinition().trim();
+			String newDefinition = "";
 			if (view.getDictionary().checkDefinitionExisted(slangword, definition)) {
-		            String newDefinition = JOptionPane.showInputDialog("Enter new definition");
-		            try {
-						FileIO.editSlangWord(view.getDictionary(), slangword, definition, newDefinition);
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					do {
+						newDefinition = JOptionPane.showInputDialog("Enter new definition");
+						if (newDefinition == null || newDefinition.trim().equals("")) {
+			            	int choice = JOptionPane.showConfirmDialog(
+									view, 
+									"You have not enter a new definition. Do you want to continue to edit this definition?", 
+									"Confirmed continue edit the definition", 
+									JOptionPane.YES_NO_OPTION
+									);
+							if (choice != JOptionPane.YES_OPTION) {
+								newDefinition = "";
+								break;
+							}
+			            }
+						else if (view.getDictionary().checkDefinitionExisted(slangword, newDefinition)) {
+			            	int choice = JOptionPane.showConfirmDialog(
+									view, 
+									"The definition existed. Do you want to continue to edit this definition?", 
+									"Confirmed continue edit the definition", 
+									JOptionPane.YES_NO_OPTION
+									);
+							if (choice != JOptionPane.YES_OPTION) {
+								newDefinition = "";
+								break;
+							}
+			            }
+					} while(newDefinition == null || newDefinition.equals("") || view.getDictionary().checkDefinitionExisted(slangword, newDefinition));
+		            
+					if (!newDefinition.equals("")) {
+						try {
+							FileIO.editSlangWord(view.getDictionary(), slangword, definition, newDefinition);
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+			            JOptionPane.showMessageDialog(view, "Edit this slang word successfully");
+			            ((DictionaryPanel) view.getDictionaryView()).displayDictionary();
 					}
-		            JOptionPane.showMessageDialog(view, "Edit this slang word successfully");
 			} else {
 				JOptionPane.showMessageDialog(view, "Please enter correct slang word and definition");
 			}
@@ -116,6 +150,7 @@ public class SlangWordController implements ActionListener {
 						e1.printStackTrace();
 					}
 					JOptionPane.showMessageDialog(view, "Delete the slang word with this definition successfully");
+					((DictionaryPanel) view.getDictionaryView()).displayDictionary();
 				}
 			} else {
 				JOptionPane.showMessageDialog(view, "Please enter correct slang word and definition");
@@ -139,6 +174,7 @@ public class SlangWordController implements ActionListener {
 					e1.printStackTrace();
 				}
 				JOptionPane.showMessageDialog(view, "Reset the dictionary successfully");
+				((DictionaryPanel) view.getDictionaryView()).displayDictionary();
 			}
 		}
 		else if (command.equals("Random")) {

@@ -55,7 +55,7 @@ public class HistoryPanel extends JPanel {
 		scrollPaneHistory.setViewportView(tableHistory);
 		displayHistory();
 		
-		JLabel lblKeywordsSearched = new JLabel("100 keywords searched");
+		JLabel lblKeywordsSearched = new JLabel(historyModel.getHistory().size() + " searched");
 		lblKeywordsSearched.setFont(new Font("Tahoma", Font.ITALIC, 20));
 		lblKeywordsSearched.setBounds(135, 22, 219, 54);
 		add(lblKeywordsSearched);

@@ -43,7 +43,7 @@ public class FileIO {
 			while (line != null) {
 					wr.write(line + "\n");
 					String[] slang = line.split("`");
-					String[] definitionList = slang[1].split("| ");
+					String[] definitionList = slang[1].split("\\| ");
 					ArrayList<String> definitionSet = new ArrayList<>();
 					for (String definition : definitionList) {
 						definitionSet.add(definition);
