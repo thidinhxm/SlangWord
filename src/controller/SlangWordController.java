@@ -177,7 +177,7 @@ public class SlangWordController implements ActionListener {
 				((DictionaryPanel) view.getDictionaryView()).displayDictionary();
 			}
 		}
-		else if (command.equals("Random")) {
+		else if (command.equals("Random on this day")) {
 			String oldRandomSlangWordText = "";
 			try {
 				oldRandomSlangWordText = FileIO.readRandomSlangWordThisDay();
@@ -231,6 +231,17 @@ public class SlangWordController implements ActionListener {
 				}
 			}
 			
+		}
+		else if (command.equals("Reset Random")) {
+			String randomSlangWord = view.getDictionary().getRandomSlangWord();
+			String randomDefintion = view.getDictionary().getDefinitionString(randomSlangWord);
+			((GamePanel) view.getGameView()).setTextRandomSlangWord(randomSlangWord, randomDefintion);
+			try {
+				FileIO.writeRandomSlangWordThisDay(randomSlangWord);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		else if (command.equals("Play Now")) {
 			ArrayList<String> questionAndAnswerList = null;

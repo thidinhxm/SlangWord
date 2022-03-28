@@ -26,18 +26,21 @@ public class GamePanel extends JPanel {
 	private JTextField txtRandomDefinition;
 	private JPanel panelQuestion;
 	private JTextField textFieldMaxScore;
-	private JTextField textFieldYourScore;
-	private Dictionary dictionaryModel;
 	private JLabel lblQuestion;
+	private JComboBox<String> comboBoxGameType;
+	private JButton btnPlayNow;
+	private int maxScore;
+	private int yourScore;
+	private JButton btnResetRandom;
+	private JLabel lblYourScore;
+	private JTextField textFieldYourScore;
 	private JButton btnA;
 	private JButton btnB;
 	private JButton btnC;
 	private JButton btnD;
-	private JComboBox<String> comboBoxGameType;
-	private JButton btnPlayNow;
 	private JButton btnNextQuestion;
-	private int maxScore;
-	private int yourScore;
+	private JButton btnEnd;
+	private JButton btnRandom;
 	/**
 	 * Create the panel.
 	 */
@@ -51,18 +54,24 @@ public class GamePanel extends JPanel {
 			e.printStackTrace();
 		}
 		yourScore = 0;
-		JButton btnRandom = new JButton("Random");
+		btnRandom = new JButton("Random on this day");
 		btnRandom.addActionListener(action);
 		btnRandom.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnRandom.setBounds(48, 63, 117, 54);
+		btnRandom.setBounds(48, 63, 226, 54);
 		this.add(btnRandom);
+		
+		btnResetRandom = new JButton("Reset Random");
+		btnResetRandom.addActionListener(action);
+		btnResetRandom.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnResetRandom.setBounds(48, 142, 226, 54);
+		add(btnResetRandom);
 		
 		txtRandomSlangWord = new JTextField("Slang Word:");
 		txtRandomSlangWord.setEditable(false);
 		txtRandomSlangWord.setForeground(Color.GRAY);
 		txtRandomSlangWord.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		txtRandomSlangWord.setColumns(10);
-		txtRandomSlangWord.setBounds(249, 64, 583, 54);
+		txtRandomSlangWord.setBounds(284, 64, 548, 54);
 		this.add(txtRandomSlangWord);
 		
 		txtRandomDefinition = new JTextField("Definition:");
@@ -70,7 +79,7 @@ public class GamePanel extends JPanel {
 		txtRandomDefinition.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		txtRandomDefinition.setEditable(false);
 		txtRandomDefinition.setColumns(10);
-		txtRandomDefinition.setBounds(249, 142, 583, 54);
+		txtRandomDefinition.setBounds(284, 142, 548, 54);
 		add(txtRandomDefinition);
 		
 		btnPlayNow = new JButton("Play Now");
@@ -89,59 +98,59 @@ public class GamePanel extends JPanel {
 		panelQuestion = new JPanel();
 		panelQuestion.setLayout(null);
 		panelQuestion.setBackground(new Color(244, 164, 96));
-		panelQuestion.setBounds(48, 358, 784, 283);
+		panelQuestion.setBounds(48, 340, 784, 333);
 		add(panelQuestion);
 		
 		lblQuestion = new JLabel("");
 		lblQuestion.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblQuestion.setBounds(0, 20, 505, 54);
+		lblQuestion.setBounds(0, 10, 505, 101);
 		panelQuestion.add(lblQuestion);
 		
-		btnA = new JButton("A");
-		btnA.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnA.setBounds(0, 103, 374, 54);
-		panelQuestion.add(btnA);
-		
-		btnB = new JButton("B");
-		btnB.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnB.setBounds(410, 103, 374, 54);
-		panelQuestion.add(btnB);
-		
-		btnC = new JButton("C");
-		btnC.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnC.setBounds(0, 167, 374, 54);
-		panelQuestion.add(btnC);
-		
-		btnD = new JButton("D");
-		btnD.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnD.setBounds(410, 167, 374, 54);
-		panelQuestion.add(btnD);
-		
-		btnNextQuestion = new JButton("Next Question");
-		btnNextQuestion.addActionListener(action);
-		btnNextQuestion.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnNextQuestion.setBounds(199, 229, 175, 54);
-		panelQuestion.add(btnNextQuestion);
-		
-		JButton btnEnd = new JButton("End");
-		btnEnd.addActionListener(action);
-		btnEnd.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnEnd.setBounds(410, 231, 175, 54);
-		panelQuestion.add(btnEnd);
-		
-		JLabel lblYourScore = new JLabel("Your Score:");
+		lblYourScore = new JLabel("Your Score:");
 		lblYourScore.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblYourScore.setBounds(581, 19, 124, 54);
+		lblYourScore.setBounds(581, 57, 124, 54);
 		panelQuestion.add(lblYourScore);
 		
-		textFieldYourScore = new JTextField(yourScore + "");
+		textFieldYourScore = new JTextField("0");
 		textFieldYourScore.setHorizontalAlignment(SwingConstants.CENTER);
 		textFieldYourScore.setForeground(Color.GRAY);
 		textFieldYourScore.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		textFieldYourScore.setEditable(false);
 		textFieldYourScore.setColumns(10);
-		textFieldYourScore.setBounds(715, 21, 69, 54);
+		textFieldYourScore.setBounds(715, 59, 69, 54);
 		panelQuestion.add(textFieldYourScore);
+		
+		btnA = new JButton("A");
+		btnA.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnA.setBounds(0, 141, 374, 54);
+		panelQuestion.add(btnA);
+		
+		btnB = new JButton("B");
+		btnB.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnB.setBounds(410, 141, 374, 54);
+		panelQuestion.add(btnB);
+		
+		btnC = new JButton("C");
+		btnC.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnC.setBounds(0, 205, 374, 54);
+		panelQuestion.add(btnC);
+		
+		btnD = new JButton("D");
+		btnD.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnD.setBounds(410, 205, 374, 54);
+		panelQuestion.add(btnD);
+		
+		btnNextQuestion = new JButton("Next Question");
+		btnNextQuestion.addActionListener(action);
+		btnNextQuestion.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnNextQuestion.setBounds(199, 267, 175, 54);
+		panelQuestion.add(btnNextQuestion);
+		
+		btnEnd = new JButton("End");
+		btnEnd.addActionListener(action);
+		btnEnd.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnEnd.setBounds(410, 269, 175, 54);
+		panelQuestion.add(btnEnd);
 		
 		JLabel lblMaxScore = new JLabel("Max Score:");
 		lblMaxScore.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -156,6 +165,7 @@ public class GamePanel extends JPanel {
 		textFieldMaxScore.setColumns(10);
 		textFieldMaxScore.setBounds(765, 277, 67, 54);
 		add(textFieldMaxScore);
+		
 		panelQuestion.setVisible(false);
 	}
 	
@@ -170,7 +180,7 @@ public class GamePanel extends JPanel {
 	
 	public void createQuestionAndAnwser(ArrayList<String> listQuestionAndAnswer) {
 		
-		lblQuestion.setText(listQuestionAndAnswer.get(0));
+		lblQuestion.setText("<html>" + listQuestionAndAnswer.get(0) + "</html>");
 		int a = Integer.parseInt(listQuestionAndAnswer.get(5));
 		int b = Integer.parseInt(listQuestionAndAnswer.get(6));
 		int c = Integer.parseInt(listQuestionAndAnswer.get(7));
