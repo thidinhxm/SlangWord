@@ -6,8 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -17,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import model.Dictionary;
 import model.FileIO;
 
 public class GamePanel extends JPanel {
